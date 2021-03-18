@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 配置Mabatis映射文件 -->
+<mapper namespace="com.dao.CateDAO">
+    <resultMap  id="cateMap" type="cate"> <!--数据库表的字段-->
+        <id property="cateid" column="cateid" ></id>
+        <result property="catename" column="catename"></result>
+        <result property="memo" column="memo"></result>
+    </resultMap>
+
+    <insert id="insertCate" parameterType="cate">
+        insert into cate(cateid,catename,memo) values (#{cateid},#{catename},#{memo})
+    </insert>
+
+    <update id="updateCate" parameterType="cate">
+        update cate set catename=#{catename},memo=#{memo} where cateid=#{cateid}
+    </update>
+
+    <delete id="deleteCate" parameterType="String">
+        delete from cate where cateid=#{cateid}
+    </delete>
+
+    <select id="getCateById" parameterType="String" resultMap="cateMap">
+        select a.* from cate a where 1=1 and cateid=#{cateid}
+    </select>
+
+    <select id="getCateByLike" parameterType="cate" resultMap="cateMap">
+        select a.* from cate a where 1=1
+        <if test="null != catename and ''!= catename">
+            and a.catename like CONCAT('%',CONCAT(#{catename},'%'))
+        </if>
+        <if test="null != memo and ''!= memo">
+            and a.memo like CONCAT('%',CONCAT(#{memo},'%'))
+        </if>
+    </select>
+    <select id="getAllCate" resultMap="cateMap">
+        select a.* from cate a where 1=1 order by cateid desc/*倒序排序*/
+    </select>
+
+    <select id="getCateFront" resultMap="cateMap">
+        select a.* from cate a order by cateid desc limit 5;
+    </select>
+
+
+
+
+
+</mapper>
