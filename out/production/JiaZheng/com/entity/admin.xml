@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 配置Mabatis映射文件 -->
+<mapper namespace="com.dao.AdminDAO">
+    <resultMap type="admin" id="adminMap"> <!--数据库表的字段-->
+        <id property="adminid" column="adminid" ></id>
+        <result property="username" column="username" ></result>
+        <result property="password" column="password" ></result>
+        <result property="realname" column="realname" ></result>
+        <result property="contact" column="contact" ></result>
+        <result property="role" column="role" ></result>
+        <result property="addtime" column="addtime" ></result><!---->
+    </resultMap>
+
+    <select id="getAdminByCond" parameterType="admin" resultMap="adminMap">
+        select a.* from admin a where 1=1    /*a为别名*/
+        <if test="username != null and '' != username">
+            and a.username = #{username}
+        </if>
+        <if test="password != null and '' != password">
+            and a.password = #{password}
+        </if>
+        <if test="realname != null and '' != realname">
+            and a.realname = #{realname}
+        </if>
+        <if test="contact != null and '' != contact">
+            and a.contact = #{contact}
+        </if>
+        <if test="role != null and '' != role">
+            and a.role = #{role}
+        </if>
+        <if test="addtime != null and '' != addtime">
+            and a.addtime = #{addtime}
+        </if>
+    </select>
+
+    <select id="getAdminById" parameterType="String" resultMap="adminMap">
+        select a.* from admin a where 1=1 and adminid=#{adminid}
+    </select>
+
+    <update id="updateAdmin" parameterType="admin">
+        update admin set username=#{username},password=#{password},
+                         realname=#{realname},contact=#{contact},role=#{role},
+                         addtime=#{addtime} where adminid=#{adminid}
+    </update>
+<!--插入后台人员-->
+    <insert id="insertAdmin" parameterType="admin">
+        insert into admin(adminid,username,password,realname,contact,role,addtime)
+        values(#{adminid},#{username},#{password},#{realname},#{contact},#{role},#{addtime})
+    </insert>
+
+    <select id="getAdminByLike" parameterType="admin" resultMap="adminMap">
+        select a.*from admin a where 1=1
+        <if test="username != null and username !=''">
+            and a.username like concat('%',concat(#{username},'%'));
+        </if>
+        <if test="password != null and password !=''">
+            /*注意！！！！有可能concat有大小写问题*/
+            and a.password like concat('%',concat(#{password},'%'));
+        </if>
+        <if test="realname != null and realname !=''">
+            and a.realname like concat('%',concat(#{realname},'%'));
+        </if>
+        <if test="contact != null and contact !=''">
+            and a.contact like concat('%',concat(#{contact},'%'));
+        </if>
+        <if test="role != null and role !=''">
+            and a.role like concat('%',concat(#{role},'%'));
+        </if>
+        <if test="addtime != null and addtime !=''">
+            and a.addtime like concat('%',concat(#{addtime},'%'));
+        </if>
+    </select>
+
+    <delete id="deleteAdmin" parameterType="String" >
+           delete from admin where adminid=#{adminid}
+    </delete>
+</mapper>
